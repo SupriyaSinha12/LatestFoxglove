@@ -1,0 +1,28 @@
+
+
+li{
+    list-style:none;
+ }
+
+ button{
+  
+    width: 7rem;
+    height:3rem;
+    border-radius: 4px;
+    margin-top: 2rem;
+    margin-right: 4rem;
+    float:left;
+    margin-bottom: 3rem;
+    margin-left: 4rem;
+    
+ }
+
+ .increment{
+margin-left: 4rem;
+align-items: center;
+ }
+
+ input{
+    width: 4rem;
+    height: 2rem;
+ }
