@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 
 import './style.css';
 
-function CarControl({ context }: { context: PanelExtensionContext }): JSX.Element {
+function Acceleration({ context }: { context: PanelExtensionContext }): JSX.Element {
   const [topics, setTopics] = useState<undefined | Immutable<Topic[]>>();
 
   // Function to send a signal to the car
@@ -37,32 +37,23 @@ function CarControl({ context }: { context: PanelExtensionContext }): JSX.Elemen
     context.subscribe([{ topic: "/some/topic" }]);
   }, [context]);
 
-  // invoke the done callback once the render is complete
+  // invoke the done callback once the render is complete //acceleration. Deceleration
   useEffect(() => {
     renderDone?.();
   }, [renderDone]);
 
   return (
 <div className="container">
-    <div className="top-bar">
-        <button id="VIM_command" className="btn-power">POWER</button>
-        <select id="VEHOP_command" className="vehop-mode">
-          <option value="0">No Request</option>
-          <option value="1">No Vehicle Operator Mode</option>
-          <option value="2">Vehicle Operator Mode</option>
-        </select>
+    <div className="acceleration-bar">
+        <button id="Accelerate_command" className="btn btn-accelerate" style={{ backgroundColor: buttonColor }} onClick={handleClick}>Accelerate</button>
+        <button id="Decelerate_command" className="btn btn-decelerate" style={{ backgroundColor: buttonColor }} onClick={handleClick}>Decelerate</button>
     </div>
           
-    <div className="btn-section">
-          <button id="ADMode_command" className="btn btn-AD" style={{ backgroundColor: buttonColor }} onClick={handleClick}>Activate AD-MODE</button>
-          <button id="ADMode_command" className="btn btn-AD" style={{ backgroundColor: buttonColor }} onClick={handleClick}>Deactivate AD-MODE</button>
-          <button id="Horn_command" className="btn btn-horn" style={{ backgroundColor: buttonColor }} onClick={handleClick}>Horn</button>
-          <button id="HL_command" className="btn btn-HL" style={{ backgroundColor: buttonColor }} onClick={handleClick}>HAZARD LIGHT</button>
-          <button id="HL_command" className="btn btn-rlane" style={{ backgroundColor: buttonColor }} onClick={handleClick}>Right Lane</button>
-          <button id="HL_command" className="btn btn-llane" style={{ backgroundColor: buttonColor }} onClick={handleClick}>Left Lane</button>
-         
+    <div className="break-section">
+          <button id="break_command" className="btn btn-break" style={{ backgroundColor: buttonColor }} onClick={handleClick}>Break</button>
     </div>
-
+       
+  
     <div>
         {(topics ?? []).map((topic) => (
           <>
@@ -79,8 +70,8 @@ function CarControl({ context }: { context: PanelExtensionContext }): JSX.Elemen
   );
 }
 
-export function initCarControl(context: PanelExtensionContext): () => void {
-  ReactDOM.render(<CarControl context={context} />, context.panelElement);
+export function initAcceleration(context: PanelExtensionContext): () => void {
+  ReactDOM.render(<Acceleration context={context} />, context.panelElement);
 
   // Return a function to run when the panel is removed
   return () => {

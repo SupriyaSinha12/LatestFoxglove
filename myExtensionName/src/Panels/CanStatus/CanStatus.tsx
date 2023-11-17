@@ -44,65 +44,60 @@ function CanStatus({ context }: { context: PanelExtensionContext }): JSX.Element
   }, [renderDone]);
 
   return (
-    <div className="container" >
-        {/* <h2 className="title"> CAR STATUS </h2> */}
-             
-               
-                 <div id="ADMode_Act" className="status"><span className="dot"></span>
+    <div className="container"  >
+            <div className="canstatus">
+                  <div id="ADMode_Act" className="status status1"><span className="dot"></span>
                         AD-Mode Status 
-                  </div><br></br>
-                  <div id="ADMode_Status" className="status" ><span className="dot"></span>
+                  </div>
+                  <div id="ADMode_Status" className="status status2" ><span className="dot"></span>
                         Ready to AD-Mode
-                  </div><br></br>
-                  <div id="Steering_DS" className="status"><span className="dot"></span>
+                  </div>
+                  <div id="Steering_DS" className="status status3"><span className="dot"></span>
                         Steering Degraded
-                  </div><br></br>
-                  <div id="Steering_RDS" className="status"><span className="dot"></span>
+                  </div> 
+                  <div id="Steering_RDS" className="status status4"><span className="dot"></span>
                         Redundant Steering Degraded
-                  </div><br></br>
-                  <div id="Brake_DS" className="status"><span className="dot"></span>
+                  </div>
+                  <div id="Brake_DS" className="status status5"><span className="dot"></span>
                         Brake Degraded
-                  </div><br></br>
-                  <div id="Brake_RDS" className="status"><span className="dot"></span>
+                  </div>
+                  <div id="Brake_RDS" className="status status6"><span className="dot"></span>
                         Redundant Brake Degraded
-                  </div><br></br>
-                  <div id="SSM_DS"  className="status"><span className="dot"></span>
+                  </div>
+                  <div id="SSM_DS"  className="status status7"><span className="dot"></span>
                         SSM Degraded
-                  </div><br></br>
-                 <div id="SSMB_DS" className="status" ><span className="dot"></span>
+                  </div>
+                 <div id="SSMB_DS" className="status status8" ><span className="dot"></span>
                         SSMB Degraded
-                  </div><br></br>
-                  <div id="PrimaryVolt_S" className="status"><span className="dot"></span>
+                  </div>
+                  <div id="PrimaryVolt_S" className="status status9"><span className="dot"></span>
                         Primary 12-Volt Side
-                  </div><br></br>
-                  <div id="SecondaryVolt_S" className="status"><span className="dot"></span>
+                  </div>
+                  <div id="SecondaryVolt_S" className="status status10"><span className="dot"></span>
                         Secondary 12-Volt Side
-                  </div><br></br>
-                  <div id="EPB_S" className="status"><span className="dot"></span>
+                  </div>
+                  <div id="EPB_S" className="status status11"><span className="dot"></span>
                         P-lock & EPB Capability
-                  </div><br></br>
-                  <div id="SEPB_S" className="status"><span className="dot"></span>
+                  </div>
+                  <div id="SEPB_S" className="status status12"><span className="dot"></span>
                         P-lock & EPB Capability
-                  </div><br></br>
-                  <div id="DriverPr" className="status"><span className="dot"></span>
+                  </div>
+                  <div id="DriverPr" className="status status13"><span className="dot"></span>
                         Driver Present
-                  </div><br></br>
-                  <div id="DriverPrQF" className="status"><span className="dot"></span>
+                  </div>
+                  <div id="DriverPrQF" className="status status14"><span className="dot"></span>
                         Driver Present Qf
                   </div>
-
-        
+            </div>            
             <div >
-      
-            {(topics ?? []).map((topic) => (
-            <>
-                  <div key={topic.name}>{topic.name}</div>
-                  <div key={topic.datatype}>{topic.datatype}</div>
-            </>
-            ))}
+                  {(topics ?? []).map((topic) => (
+                        <>
+                              <div key={topic.name}>{topic.name}</div>
+                              <div key={topic.datatype}>{topic.datatype}</div>
+                        </>
+                  ))}
             </div>
-      
-    </div>
+      </div>
   );
 }
 

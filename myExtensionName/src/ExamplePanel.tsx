@@ -1,10 +1,10 @@
-import { Immutable, MessageEvent, PanelExtensionContext, Topic } from "@foxglove/studio";
+import { Immutable, PanelExtensionContext, Topic } from "@foxglove/studio";
 import { useEffect, useLayoutEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
 function ExamplePanel({ context }: { context: PanelExtensionContext }): JSX.Element {
   const [topics, setTopics] = useState<undefined | Immutable<Topic[]>>();
-  const [messages, setMessages] = useState<undefined | Immutable<MessageEvent[]>>();
+ // const [messages, setMessages] = useState<undefined | Immutable<MessageEvent[]>>();
 
   const [renderDone, setRenderDone] = useState<(() => void) | undefined>();
 
@@ -30,7 +30,7 @@ function ExamplePanel({ context }: { context: PanelExtensionContext }): JSX.Elem
       setTopics(renderState.topics);
 
       // currentFrame has messages on subscribed topics since the last render call
-      setMessages(renderState.currentFrame);
+     // setMessages(renderState.currentFrame);
     };
 
     // After adding a render handler, you must indicate which fields from RenderState will trigger updates.
@@ -55,13 +55,9 @@ function ExamplePanel({ context }: { context: PanelExtensionContext }): JSX.Elem
 
   return (
     <div style={{ padding: "1rem" }}>
-      <h2>Welcome to your new extension panel!</h2>
-      <p>
-      This is my Panel!!
-      </p>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", rowGap: "0.2rem" }}>
-        <b style={{ borderBottom: "1px solid" }}>Topic</b>
-        <b style={{ borderBottom: "1px solid" }}>Datatype</b>
+      <h1 style={{ fontSize: "20px", textAlign: "center", marginBottom: "2rem"}}>Welcome to our AD-EYE extension panel!</h1>
+      <h2 style={{ fontSize: "20px", fontWeight: "bold", textAlign: "center" }}> "Nothing is impossible, the word itself says 'I'm possible!' &#128512; " </h2>
+      <div>
         {(topics ?? []).map((topic) => (
           <>
             <div key={topic.name}>{topic.name}</div>
@@ -69,16 +65,17 @@ function ExamplePanel({ context }: { context: PanelExtensionContext }): JSX.Elem
           </>
         ))}
       </div>
-      <div>{messages?.length}</div>
     </div>
   );
 }
 
 export function initExamplePanel(context: PanelExtensionContext): () => void {
+  // Render the ExamplePanel component into the specified panelElement
   ReactDOM.render(<ExamplePanel context={context} />, context.panelElement);
 
   // Return a function to run when the panel is removed
   return () => {
+       // Unmount (remove) the ExamplePanel component from the panelElement
     ReactDOM.unmountComponentAtNode(context.panelElement);
   };
 }

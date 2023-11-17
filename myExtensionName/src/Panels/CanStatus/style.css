@@ -1,24 +1,21 @@
 
+.container{
+  margin-top: 20px;
+}
 
-.container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px; /* Adjust the gap as needed */
-    margin-top: 2rem;
-  }
-  
-  .title{
-     text-align: center;
-     padding: 2rem;
-     margin-bottom: 1rem;
-  }
+.canstatus {
+  width: 100%;
+  margin-left: 2%;
+}
 
-  .column {
-    flex: 1;
-    text-align: center;
-  }
 
+.status{
+    width: 14%;
+    float: left;
+    /* margin-right: 1%; */
+    margin-bottom: 3px;
+    padding: 5px;
+}
 
 .dot {
     height: 25px;
@@ -26,25 +23,15 @@
     background-color: green;
     border-radius: 50%;
     display: inline-block;
-    /* margin: 0 auto; */
     margin-right: 10px;
     line-height: 25px;
-    color: white;
-    font-weight: bold;
-    font-size: 1.2rem;
+}
 
-  }
-
-  .status{
-    text-align: left;
-    align-items: center;
-    margin-left: 5rem;
-  }
 
   /* Media query for responsive design */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .column {
       flex: 1 0%;
       max-width: 100%;
     }
-  }
+  } */
