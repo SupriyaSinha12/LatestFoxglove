@@ -1,42 +1,43 @@
-
-
-.steering-btn{
-   overflow:hidden;
+.steering-btn {
+  overflow: hidden;
 }
-.btn-left, .btn-right{
-    width: 7rem;
-    height:3rem;
-    border-radius: 4px;
-    text-transform: uppercase;
-    margin-top: 1rem;
-}
-
- #RIGHT {
-   float: right;
- }
-
-.increment{
-font-size: 15px;
-text-align: center;
-margin-bottom: 3rem;
+.btn-left,
+.btn-right {
+  width: 7rem;
+  height: 3rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  /*   background-image: url("../icons8-steering-wheel-60.png");
+  background-color: #c51717; */
 }
 
- input{
-    width: 6rem;
-    height: 3rem;
- }
-
- .wheel-info{
-   font-size: 15px;
-   text-align: center;
-   margin-bottom: 2rem;
-   margin-top: 1rem; 
+#RIGHT {
+  float: right;
 }
-   
-.btn-wheel{
-   width: 6rem;
-   height: 3rem;
-   border-radius: 4px;  
-   text-transform: uppercase;
-   margin-left: 2rem;
+
+.increment {
+  font-size: 15px;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+input {
+  width: 6rem;
+  height: 3rem;
+}
+
+.wheel-info {
+  font-size: 15px;
+  text-align: center;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+
+.btn-wheel {
+  width: 6rem;
+  height: 3rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  margin-left: 2rem;
 }

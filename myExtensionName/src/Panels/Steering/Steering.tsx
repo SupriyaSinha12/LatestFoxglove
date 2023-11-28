@@ -1,145 +1,157 @@
 import { Immutable, MessageEvent, PanelExtensionContext, Topic } from "@foxglove/studio";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import ReactDOM from "react-dom";
+
 import { ros1 } from "@foxglove/rosmsg-msgs-common";
-import { PanelConfig } from "../..";
-import { CompressedImage } from "@foxglove/schemas";
 
-import './style.css';
+//import "./icons8-steering-wheel-60.png";
 
-export const CUSTOM_METHOD = "custom";
-export const PREV_MSG_METHOD = "previous message";
+import "./style.css";
 
-const PanelConfig = {
-  diffEnabled: false,
-  diffMethod: CUSTOM_METHOD,
-  topicPath: "/sending_angle",
-};
-
-let increment_value_L = 0;
-let increment_value_R = 0;
-
-function changeIncrement(current: number) {
-  const box = document.getElementById("INCREMENT") as HTMLInputElement;
-  const value = box!.value;
-
-  const left = document.getElementById("LEFT");
-  const right = document.getElementById("RIGHT");
-
-  increment_value_R = parseInt(value) + current < -48 ? increment_value_R : parseInt(value);
-  right!.innerText = "RIGHT " + increment_value_R;
-
-  increment_value_L = -parseInt(value) + current > 48 ? increment_value_L : parseInt(value);
-  left!.innerText = "LEFT " + increment_value_L;
-
-  box!.max = Math.max(48 - current, 48 + current).toString();
-}
-
-function sendSteeringButton(id: string, currentAngle: number, publisher: any) {
-  // Calculate the new steering angle based on the button ID ('LEFT' or 'RIGHT')
-  let value = id == "LEFT" ? currentAngle + increment_value_L : currentAngle - increment_value_R;
-
-  // Convert the angle from degrees to radians
-  value *= Math.PI / 180;
-
-  // Create a command messaimport { CompressedImage } from "@foxglove/schemas";
-function sendLockButton(id: string, publisher: any) {
-  const button = document.getElementById("WHEEL") as HTMLButtonElement;
-
-  let command_message = '{"data": "WLOCK_command:';
-
-  if (button?.style.background == "rgb(21, 215, 152)") {
-    command_message += '0"}';
-    button!.style.background = "rgb(157,157,157)";
-  }
-  else {
-    command_message += '1"}';
-    button!.style.background = "rgb(21, 215, 152)";
-  }
-  const sending_command = JSON.parse(command_message);
-  console.log(sending_command);
-  publisher(sending_command as Record<string, unknown>);
-}
-}
+/* export const CUSTOM_METHOD = "custom";
+export const PREV_MSG_METHOD = "previous message"; */
 
 function Steering({ context }: { context: PanelExtensionContext }): JSX.Element {
-  const [topics, setTopics] = useState<Immutable<Topic[]> | undefined>();
+  const [topics, setTopics] = useState<undefined | Immutable<Topic[]>>();
   const [messages, setMessages] = useState<undefined | Immutable<MessageEvent[]>>();
 
   const [renderDone, setRenderDone] = useState<(() => void) | undefined>();
 
-
- // const message = baseItem?.MessageEvent.message
-  //let wheelAngle = Math.round(message?.data * 180 / Math.PI * 10) / 10;
-  let wheelAngle = 0;
+  // We use a layout effect to setup render handling for our panel. We also setup some topic subscriptions.
   useLayoutEffect(() => {
     context.onRender = (renderState, done) => {
       setRenderDone(() => done);
       setTopics(renderState.topics);
 
-         // Save the most recent message on our image topic.
-         if (renderState.currentFrame && renderState.currentFrame.length > 0) {
-            setMessages(renderState.currentFrame[renderState.currentFrame.length - 1] as ImageMessage);
-             /* setMessages(renderState.currentFrame);  */
-         }
+      console.log("renderState", renderState);
+
+      // currentFrame has messages on subscribed topics since the last render call
+      //type currtopic = String;
+
+      /* if (renderState.currentFrame && renderState.currentFrame.length > 0) {
+        setMessages(renderState.currentFrame[renderState.currentFrame.length - 1] as currtopic);
+      } */
+
+      setMessages(renderState.currentFrame);
     };
 
     context.watch("topics");
     context.watch("currentFrame");
+    context.watch("allFrames");
 
-    /* context.subscribe([{ topic: "/sending_angle" }]); */
+    context.subscribe([{ topic: "/sending_commands", preload: true }]);
 
- //indicate an intent to publish a specific datatype on a topic. A panel must call context.advertise before being able to publish on the topic (context.publish).
-    context.advertise?.("/sending_commands", "sensor_msgs/Joy", {
-      datatypes: new Map([
-        ["std_msgs/Header", ros1["std_msgs/Header"]],
-        ["std_msgs/Float32", ros1["std_msgs/Float32"]],
-        ["std_msgs/Int32", ros1["std_msgs/Int32"]],
-        ["sensor_msgs/Joy", ros1["sensor_msgs/Joy"]],
-      ]),
-    });
-
-     
-
+    // console.log("testing publish", context.publish);
   }, [context]);
 
+  // invoke the done callback once the render is complete
   useEffect(() => {
     renderDone?.();
   }, [renderDone]);
 
+  const increment_value_L = 0;
+  const increment_value_R = 0;
+  let wheelAngle = 50;
+  let tempvalue: number = 0;
 
-   return (
-     <div> 
-          <div className="wheel-info">CURRENT WHEEL ANGLE:   &ensp; </div>
-          <div className="steering-btn">
-          {/*    <button id="LEFT" className="btn btn-left" >LEFT</button>
-             <button id="RIGHT" className="btn btn-right" >RIGHT</button> */}
-             <button id="LEFT" className="btn btn-left" onClick={()=>sendSteeringButton("LEFT", wheelAngle, CommandPublisher)}>LEFT</button>
-             <button id="RIGHT" className="btn btn-right" onClick={()=>sendSteeringButton("RIGHT", wheelAngle, CommandPublisher)}>RIGHT</button>
-          </div>
-          <div className="increment">
-            Increment step:&ensp;
-          <input id="INCREMENT" type="number" onChange={()=>changeIncrement(wheelAngle)} min="0"></input>
-           </div>
-          <button id="WHEEL" className="btn-wheel" onClick={()=>sendLockButton("WHEEL", CommandPublisher)}>Wheel Lock</button>
-    
-       <div >
-         {(topics ?? []).map((topic) => (
-           <>
-             <div key={topic.name}>{topic.name}</div>
-             <div key={topic.datatype}>{topic.datatype}</div>
-           </>
-         ))}
-       </div>
+  /*   const sendLockButton = useCallback(
+    async (id: string) => {
+      context.advertise?.("/sending_commands", "std_msgs/String", {
+        datatypes: new Map([["std_msgs/String", ros1["std_msgs/String"]]]),
+      });
 
-     </div>
+      const command_message = '{"data": "WLOCK_command:';
+      const sending_command = JSON.parse(command_message);
+      context.publish?.("/sending_commands", sending_command);
+    },
+    [context.sendLockButton],
+  ); */
+
+  const callService = useCallback(
+    async (id: string, currentAngle: number) => {
+      /*   console.log("Current Message", messages);
+      console.log("Current Topics", messages); */
+
+      /* const allframes = context.subscribe([{ topic: "/sending_commands" }]);
+
+      console.log("context.watch currentFrame", allframes); */
+
+      let value =
+        id == "LEFT" ? currentAngle + increment_value_L : currentAngle - increment_value_R;
+      value *= Math.PI / 180;
+      console.log("currentAngle", currentAngle);
+      tempvalue += 1;
+
+      console.log("tempvalue", tempvalue);
+      context.advertise?.("/sending_commands", "std_msgs/String", {
+        datatypes: new Map([["std_msgs/String", ros1["std_msgs/String"]]]),
+      });
+
+      const command_message2 = '{"data": "STEERING_command:' + tempvalue + '"}';
+      const sending_command2 = JSON.parse(command_message2);
+      context.publish?.("/sending_commands", sending_command2);
+    },
+    [context.callService],
+  );
+
+  return (
+    <div>
+      <div className="wheel-info">CURRENT WHEEL ANGLE: &ensp; {`${wheelAngle} °`}</div>
+      {/*  <div>
+      <image src="icons8-steering-wheel-60.png" alt="steering wheel" width="500" height="600"> 
+      </div> */}
+      <button
+        id="RIGHT"
+        className="btn btn-right"
+        onClick={async () => {
+          callService("RIGHT", wheelAngle);
+        }}
+      >
+        RIGHT
+      </button>
+
+      <button
+        id="LEFT"
+        className="btn btn-left"
+        onClick={async () => {
+          await callService("LEFT", wheelAngle);
+        }}
+      >
+        LEFT
+      </button>
+      <div className="increment">
+        Increment step:&ensp;
+        <input id="INCREMENT" type="number" min="0"></input>
+      </div>
+      <button
+        id="WHEEL"
+        className="btn-wheel"
+        /*  onClick={async () => {
+          sendLockButton("RIGHT", wheelAngle);
+        }} */
+      >
+        Wheel Lock
+      </button>
+
+      <div>
+        {(topics ?? []).map((topic) => (
+          <>
+            <div key={topic.name}>{topic.name}</div>
+          </>
+        ))}
+      </div>
+      <div>{messages?.length}</div>
+    </div>
   );
 }
 
 export function initSteering(context: PanelExtensionContext): () => void {
+  // Render the Steering component into the specified panelElement
   ReactDOM.render(<Steering context={context} />, context.panelElement);
 
+  // Return a function to run when the panel is removed
   return () => {
+    // Unmount (remove) the ExamplePanel component from the panelElement
     ReactDOM.unmountComponentAtNode(context.panelElement);
   };
 }

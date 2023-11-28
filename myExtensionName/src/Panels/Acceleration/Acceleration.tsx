@@ -1,33 +1,39 @@
-import { Immutable,PanelExtensionContext, Topic } from "@foxglove/studio";
+import { Immutable, PanelExtensionContext, Topic } from "@foxglove/studio";
 import { useEffect, useLayoutEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
-import './style.css';
+import "./style.css";
+
+import PngIcon from "./icons8-acceleration-48.png";
 
 function Acceleration({ context }: { context: PanelExtensionContext }): JSX.Element {
   const [topics, setTopics] = useState<undefined | Immutable<Topic[]>>();
 
   // Function to send a signal to the car
-  const [buttonColor, setButtonColor] = useState('white');
+  const [buttonColors, setButtonColors] = useState<{ [key: string]: string }>({
+    Accelerate_command: "white",
+    ADMode_Deactivate_command: "white",
+    Decelerate_command: "white",
+    break_command: "white",
+  });
 
-  const handleClick = () => {
+  const handleClick = (buttonId: string) => {
     // Change the color here
-    setButtonColor('green');
+    setButtonColors((prevColors) => ({
+      ...prevColors,
+      [buttonId]: prevColors[buttonId] === "white" ? "green" : "white",
+    }));
   };
   //const [messages, setMessages] = useState<undefined | Immutable<MessageEvent[]>>();
- 
 
   const [renderDone, setRenderDone] = useState<(() => void) | undefined>();
 
   // We use a layout effect to setup render handling for our panel. We also setup some topic subscriptions.
   useLayoutEffect(() => {
-
     context.onRender = (renderState, done) => {
-    
       setRenderDone(() => done);
 
       setTopics(renderState.topics);
-
     };
 
     context.watch("topics");
@@ -43,18 +49,44 @@ function Acceleration({ context }: { context: PanelExtensionContext }): JSX.Elem
   }, [renderDone]);
 
   return (
-<div className="container">
-    <div className="acceleration-bar">
-        <button id="Accelerate_command" className="btn btn-accelerate" style={{ backgroundColor: buttonColor }} onClick={handleClick}>Accelerate</button>
-        <button id="Decelerate_command" className="btn btn-decelerate" style={{ backgroundColor: buttonColor }} onClick={handleClick}>Decelerate</button>
-    </div>
-          
-    <div className="break-section">
-          <button id="break_command" className="btn btn-break" style={{ backgroundColor: buttonColor }} onClick={handleClick}>Break</button>
-    </div>
-       
-  
-    <div>
+    <div className="container">
+      <div className="acceleration-bar">
+        <button
+          id="Accelerate_command"
+          className="btn btn-accelerate"
+          style={{ backgroundColor: buttonColors["Accelerate_command"] }}
+          onClick={() => handleClick("Accelerate_command")}
+        >
+          {/*  <img
+            src="../icons8-acceleration-48.png" // Replace with the correct path to your image
+            alt="Acceleration"
+            style={{ marginRight: "8px" }} // Add some spacing to the right of the image
+          /> */}
+          <img src={PngIcon} style={{ width: "1.5rem", height: "1.5rem" }} />
+          Accelerate
+        </button>
+        <button
+          id="Decelerate_command"
+          className="btn btn-decelerate"
+          style={{ backgroundColor: buttonColors["Decelerate_command"] }}
+          onClick={() => handleClick("Decelerate_command")}
+        >
+          Decelerate
+        </button>
+      </div>
+
+      <div className="break-section">
+        <button
+          id="break_command"
+          className="btn btn-break"
+          style={{ backgroundColor: buttonColors["break_command"] }}
+          onClick={() => handleClick("break_command")}
+        >
+          Break
+        </button>
+      </div>
+
+      <div>
         {(topics ?? []).map((topic) => (
           <>
             <div key={topic.name}>{topic.name}</div>
@@ -62,11 +94,7 @@ function Acceleration({ context }: { context: PanelExtensionContext }): JSX.Elem
           </>
         ))}
       </div>
-      
     </div>
-
-
-    
   );
 }
 
