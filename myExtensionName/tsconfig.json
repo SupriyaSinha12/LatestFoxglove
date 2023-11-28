@@ -1,11 +1,22 @@
 {
   "extends": "create-foxglove-extension/tsconfig/tsconfig.json",
 
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "./src/**/*.json", "../package.json", "./src/**/*.tsx"], // added by supriya  "./src/**/*.json", "../package.json"
   "compilerOptions": {
+    "module": "commonjs", //added by supriya
+    "jsx": "react-jsx", //added by supriya
     "rootDir": "./src",
     "outDir": "./dist",
-    "lib": ["dom"],
+    "lib": ["dom", "dom.iterable", "es2020"],
+
+    // below lines until skipLibCheck has been added from create-foxglove-extension tsconfig.json by supriya
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "allowJs": false,
+    "newLine": "lf",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
 
     // These two settings prevent typescript from emitting .d.ts files we don't need in
     // the compiled extension.

@@ -20,7 +20,7 @@
   "devDependencies": {
     "@foxglove/eslint-plugin": "1.0.0",
     "@foxglove/studio": "1.75.0",
-    "@types/node": "^20.8.10",
+    "@types/node": "^20.10.0",
     "@types/react": "18.2.35",
     "@types/react-dom": "18.2.14",
     "@typescript-eslint/eslint-plugin": "6.9.1",
@@ -38,15 +38,21 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "prettier": "3.0.3",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "5.2.2"
+    "react-dom": "18.2.0"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@foxglove/ros1": "^3.0.0",
+    "@foxglove/rosbag": "^0.4.0",
+    "@foxglove/rosmsg": "^5.0.2",
+    "@foxglove/rosmsg-msgs-common": "^3.1.0",
+    "@foxglove/schemas": "^1.6.2",
+    "@foxglove/studio-base": "^1.48.0",
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.17",
     "@mui/styled-engine-sc": "^6.0.0-alpha.5",
+    "file-loader": "^6.2.0",
     "style-loader": "^3.3.3",
     "styled-components": "^6.1.0"
   }
