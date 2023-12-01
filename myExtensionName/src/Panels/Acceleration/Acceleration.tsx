@@ -1,14 +1,13 @@
-import { Immutable, PanelExtensionContext, Topic } from "@foxglove/studio";
+import { Immutable, MessageEvent, PanelExtensionContext } from "@foxglove/studio";
 import { useEffect, useLayoutEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
 import "./style.css";
 
-import PngIcon from "./icons8-acceleration-48.png";
+//import PngIcon from "./icons8-acceleration-48.png";
 
 function Acceleration({ context }: { context: PanelExtensionContext }): JSX.Element {
-  const [topics, setTopics] = useState<undefined | Immutable<Topic[]>>();
-
+  const [messages, setMessages] = useState<undefined | Immutable<MessageEvent[]>>();
   // Function to send a signal to the car
   const [buttonColors, setButtonColors] = useState<{ [key: string]: string }>({
     Accelerate_command: "white",
@@ -32,8 +31,7 @@ function Acceleration({ context }: { context: PanelExtensionContext }): JSX.Elem
   useLayoutEffect(() => {
     context.onRender = (renderState, done) => {
       setRenderDone(() => done);
-
-      setTopics(renderState.topics);
+      setMessages(renderState.currentFrame);
     };
 
     context.watch("topics");
@@ -57,12 +55,7 @@ function Acceleration({ context }: { context: PanelExtensionContext }): JSX.Elem
           style={{ backgroundColor: buttonColors["Accelerate_command"] }}
           onClick={() => handleClick("Accelerate_command")}
         >
-          {/*  <img
-            src="../icons8-acceleration-48.png" // Replace with the correct path to your image
-            alt="Acceleration"
-            style={{ marginRight: "8px" }} // Add some spacing to the right of the image
-          /> */}
-          <img src={PngIcon} style={{ width: "1.5rem", height: "1.5rem" }} />
+          {/* <img src={PngIcon} style={{ width: "1.5rem", height: "1.5rem" }} /> */}
           Accelerate
         </button>
         <button
@@ -86,14 +79,7 @@ function Acceleration({ context }: { context: PanelExtensionContext }): JSX.Elem
         </button>
       </div>
 
-      <div>
-        {(topics ?? []).map((topic) => (
-          <>
-            <div key={topic.name}>{topic.name}</div>
-            <div key={topic.datatype}>{topic.datatype}</div>
-          </>
-        ))}
-      </div>
+      <div>{messages?.length}</div>
     </div>
   );
 }

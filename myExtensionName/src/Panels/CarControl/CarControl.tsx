@@ -1,12 +1,10 @@
-import { Immutable, PanelExtensionContext, Topic } from "@foxglove/studio";
+import { Immutable, MessageEvent, PanelExtensionContext } from "@foxglove/studio";
 import { useEffect, useLayoutEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
 import "./style.css";
 
 function CarControl({ context }: { context: PanelExtensionContext }): JSX.Element {
-  const [topics, setTopics] = useState<undefined | Immutable<Topic[]>>();
-
   // Function to send a signal to the car
   const [buttonColors, setButtonColors] = useState<{ [key: string]: string }>({
     ADMode_command: "white",
@@ -25,7 +23,7 @@ function CarControl({ context }: { context: PanelExtensionContext }): JSX.Elemen
       [buttonId]: prevColors[buttonId] === "white" ? "green" : "white",
     }));
   };
-  //const [messages, setMessages] = useState<undefined | Immutable<MessageEvent[]>>();
+  const [messages, setMessages] = useState<undefined | Immutable<MessageEvent[]>>();
 
   const [renderDone, setRenderDone] = useState<(() => void) | undefined>();
 
@@ -34,10 +32,8 @@ function CarControl({ context }: { context: PanelExtensionContext }): JSX.Elemen
     context.onRender = (renderState, done) => {
       setRenderDone(() => done);
 
-      setTopics(renderState.topics);
+      setMessages(renderState.currentFrame);
     };
-
-    context.watch("topics");
 
     context.watch("currentFrame");
 
@@ -118,14 +114,7 @@ function CarControl({ context }: { context: PanelExtensionContext }): JSX.Elemen
         </button>
       </div>
 
-      <div>
-        {(topics ?? []).map((topic) => (
-          <>
-            <div key={topic.name}>{topic.name}</div>
-            <div key={topic.datatype}>{topic.datatype}</div>
-          </>
-        ))}
-      </div>
+      <div>{messages?.length}</div>
     </div>
   );
 }
